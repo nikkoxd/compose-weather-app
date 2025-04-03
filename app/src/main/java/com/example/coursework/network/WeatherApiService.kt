@@ -1,6 +1,6 @@
 package com.example.coursework.network
 
-import com.example.coursework.CurrentWeatherResponse
+import com.example.coursework.ForecastResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -14,8 +14,8 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface WeatherApiService {
-    @GET("current.json?key=$API_KEY&q=London&aqi=no")
-    suspend fun getCurrent(): CurrentWeatherResponse
+    @GET("forecast.json?key=$API_KEY&q=Izhevsk&days=3&&aqi=no&alerts=no")
+    suspend fun getForecast(): ForecastResponse
 }
 
 object WeatherApi {

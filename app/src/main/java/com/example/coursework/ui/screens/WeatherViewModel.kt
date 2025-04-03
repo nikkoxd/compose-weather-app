@@ -3,11 +3,13 @@ package com.example.coursework.ui.screens
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.coursework.ForecastResponse
 import com.example.coursework.network.WeatherApi
 import kotlinx.coroutines.launch
 
 class WeatherViewModel : ViewModel() {
-    val condition = mutableStateOf("")
+    val weather = mutableStateOf(ForecastResponse())
+    val error = mutableStateOf("")
 
     init {
         getWeather()
@@ -16,11 +18,11 @@ class WeatherViewModel : ViewModel() {
     fun getWeather() {
         viewModelScope.launch {
             try {
-                val response = WeatherApi.retrofitService.getCurrent()
+                val response = WeatherApi.retrofitService.getForecast()
 
-                condition.value = response.current.condition.text
+                weather.value = response
             } catch (e: Exception) {
-                condition.value = "Error: ${e.message}"
+                error.value = "Error: ${e.message}"
             }
         }
     }
