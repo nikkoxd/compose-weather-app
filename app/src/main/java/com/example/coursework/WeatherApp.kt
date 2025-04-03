@@ -1,5 +1,7 @@
 package com.example.coursework
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,10 +20,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.coursework.ui.screens.WeatherViewModel
+import java.time.Instant
+import java.util.Calendar
+import java.util.Date
 
 @Composable
 fun WeatherApp(modifier: Modifier) {
@@ -109,12 +115,12 @@ fun CurrentInfo(weather: ForecastResponse, modifier: Modifier) {
             modifier = Modifier.fillMaxHeight().weight(2f)
         ) {
             Text(
-                text = "${weather.current.temp_c} °C",
+                text = "${weather.current.temp_c}°",
                 fontSize = 36.sp,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             Text(
-                text = "Feels like ${weather.current.feelslike_c} °C",
+                text = "Feels like ${weather.current.feelslike_c}°",
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         }
@@ -165,5 +171,63 @@ fun TodayInfo(weather: ForecastResponse, modifier: Modifier) {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun ThreeDaysInfo(weather: ForecastResponse, modifier: Modifier) {
+    if (weather.forecast.forecastday.isNotEmpty()) {
+        val calendar = Calendar.getInstance()
+        Card(modifier = modifier) {
+            LazyColumn (
+                modifier = Modifier.padding(8.dp)
+            ) {
+                items (weather.forecast.forecastday.size) { day ->
+                    val timestamp = Instant.ofEpochSecond(weather.forecast.forecastday[day].date_epoch)
+                    val date = Date.from(timestamp)
+                    calendar.time = date
+                    Row (
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.padding(vertical = 8.dp).fillMaxWidth()
+                    ) {
+                        Text(
+                            text = getDayOfWeekName(calendar.get(Calendar.DAY_OF_WEEK)),
+                            modifier = Modifier.weight(2f)
+                        )
+                        Icon(
+                            painter = painterResource(
+                                weatherIconMap.getOrDefault(
+                                    weather.forecast.forecastday[day].day.condition.code,
+                                    R.drawable.sunny_24px
+                                )
+                            ),
+                            contentDescription = weather.current.condition.text,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Text(
+                            text = "${weather.forecast.forecastday[day].day.mintemp_c}°",
+                            modifier = Modifier.weight(1f)
+                        )
+                        Text(
+                            text = "${weather.forecast.forecastday[day].day.maxtemp_c}°",
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+fun getDayOfWeekName(dayOfWeek: Int) : String {
+    return when (dayOfWeek) {
+        1 -> "Sunday"
+        2 -> "Monday"
+        3 -> "Tuesday"
+        4 -> "Wednesday"
+        5 -> "Thursday"
+        6 -> "Friday"
+        7 -> "Saturday"
+        else -> "Monday"
     }
 }

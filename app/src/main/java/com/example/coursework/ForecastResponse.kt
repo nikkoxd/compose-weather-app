@@ -13,12 +13,12 @@ data class Location(
     val lat: Double = 1.0,
     val lon: Double = 1.0,
     val tz_id: String = "",
-    val localtime_epoch: Int = 0,
+    val localtime_epoch: Long = 0,
     val localtime: String = "",
 )
 
 data class Current(
-    val last_updated_epoch: Int = 0,
+    val last_updated_epoch: Long = 0,
     val last_updated: String = "",
     val temp_c: Double = 0.0,
     val temp_f: Double = 0.0,
@@ -59,7 +59,7 @@ data class Forecast (
 
 data class ForecastDay (
     val date: String = "",
-    val date_epoch: Int = 0,
+    val date_epoch: Long = 0,
     val day: Day = Day(),
     val astro: Astro = Astro(),
     val hour: List<Hour> = listOf(),
@@ -100,7 +100,7 @@ data class Astro (
 )
 
 data class Hour (
-    val time_epoch: Int = 0,
+    val time_epoch: Long = 0,
     val time: String = "",
     val temp_c: Double = 0.0,
     val temp_f: Double = 0.0,
