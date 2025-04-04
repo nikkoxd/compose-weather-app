@@ -12,13 +12,13 @@ class WeatherViewModel : ViewModel() {
     val error = mutableStateOf("")
 
     init {
-        getWeather()
+        getWeather("Izhevsk")
     }
 
-    fun getWeather() {
+    fun getWeather(city: String) {
         viewModelScope.launch {
             try {
-                val response = WeatherApi.retrofitService.getForecast()
+                val response = WeatherApi.retrofitService.getForecast(city)
 
                 weather.value = response
             } catch (e: Exception) {
